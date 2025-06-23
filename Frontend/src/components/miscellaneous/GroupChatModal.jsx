@@ -20,7 +20,7 @@ import axios from "axios";
 import { useState } from "react";
 import { ChatState } from "../../Context/ChatProvider";
 import UserBadgeItem from "../userAvatar/UserBadgeItem";
-import UserListItem from "../userAvatar/UserListItem";
+import UserListItem from "../userAvatar/userListItem";
 
 const MotionModalContent = motion.create(ModalContent);
 
