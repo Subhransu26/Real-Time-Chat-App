@@ -15,7 +15,10 @@ import MessageInput from "./MessageInput";
 import animationData from "../animations/typing.json";
 import "./styles.css";
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5000"
+    : "https://real-time-chat-app-m814.onrender.com";
 let socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {

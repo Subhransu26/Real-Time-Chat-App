@@ -9,14 +9,16 @@ const messageRoutes = require("./routes/messageRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const path = require("path");
 
+// Load environment variables
 dotenv.config();
+
+// Connect to MongoDB
 connectDB();
 
 const app = express();
+app.use(express.json()); // To accept JSON data
 
-app.use(express.json());
-
-// Routes
+// API routes
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
@@ -27,6 +29,7 @@ const __dirname1 = path.resolve();
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname1, "../Frontend/dist")));
+
   app.get("*", (req, res) =>
     res.sendFile(path.resolve(__dirname1, "../Frontend", "dist", "index.html"))
   );
@@ -35,27 +38,32 @@ if (process.env.NODE_ENV === "production") {
     res.send("API is running..");
   });
 }
+
 // ------------------ Deployment ----------------------------
 
 // Error Handling Middlewares
 app.use(notFound);
 app.use(errorHandler);
 
-//  Create HTTP server and pass it to socket.io
+// Create HTTP server
 const server = http.createServer(app);
 
-//  Attach socket.io to the server
+// Attach socket.io to the server
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173", // for local dev
+      "https://real-time-chat-app-m814.onrender.com", // your deployed frontend
+    ],
     credentials: true,
   },
 });
 
-// Socket.io logic
+// ------------------ Socket.io Events ----------------------------
+
 io.on("connection", (socket) => {
-  console.log("Connected to socket.io");
+  console.log("✅ Connected to socket.io");
 
   socket.on("setup", (userData) => {
     socket.join(userData._id);
@@ -64,7 +72,7 @@ io.on("connection", (socket) => {
 
   socket.on("join chat", (room) => {
     socket.join(room);
-    console.log("User Joined Room: " + room);
+    console.log("User Joined Room:", room);
   });
 
   socket.on("typing", (room) => socket.in(room).emit("typing"));
@@ -72,6 +80,7 @@ io.on("connection", (socket) => {
 
   socket.on("new message", (newMessageReceived) => {
     const chat = newMessageReceived.chat;
+
     if (!chat.users) return console.log("chat.users not defined");
 
     chat.users.forEach((user) => {
@@ -80,14 +89,15 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.off("setup", () => {
-    console.log("USER DISCONNECTED");
-    socket.leave(userData._id);
+  socket.on("disconnect", () => {
+    console.log("❌ USER DISCONNECTED");
   });
 });
 
-// ✅ Start the server
+// ------------------ Start Server ----------------------------
+
 const PORT = process.env.PORT || 5000;
+
 server.listen(PORT, () =>
-  console.log(`Server running on port ${PORT}`.yellow.bold)
+  console.log(`🚀 Server running on port ${PORT}`.yellow.bold)
 );
