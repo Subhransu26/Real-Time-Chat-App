@@ -2,6 +2,8 @@
 
 A full-stack real-time chat application with user authentication, one-on-one and group messaging, built using **React**, **Chakra UI**, **Express**, **MongoDB**, and **Socket.io**.
 
+🌐 Live Demo: [Real-Time Chat App on Render](https://real-time-chat-app-m814.onrender.com)
+
 ---
 
 ## 🚀 Features
