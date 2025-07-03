@@ -142,7 +142,7 @@ const MyChats = ({ fetchAgain }) => {
                     color={selectedChat === chat ? "whiteAlpha.800" : secondaryText}
                     noOfLines={1}
                   >
-                    <b>{chat.latestMessage.sender.name}:</b>{" "}
+                    <b>{chat.latestMessage?.sender?.name || "Unknown"}:</b>{" "}
                     {chat.latestMessage.content.length > 50
                       ? chat.latestMessage.content.substring(0, 50) + "..."
                       : chat.latestMessage.content}

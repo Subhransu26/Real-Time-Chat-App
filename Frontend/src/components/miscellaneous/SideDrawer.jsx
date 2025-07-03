@@ -71,6 +71,18 @@ function SideDrawer() {
       return;
     }
 
+    if (!user || !user.token) {
+    toast({
+      title: "Authentication Error",
+      description: "User token not found. Try re-logging in.",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+      position: "bottom-left",
+    });
+    return;
+  }
+
     try {
       setLoading(true);
       const config = {
