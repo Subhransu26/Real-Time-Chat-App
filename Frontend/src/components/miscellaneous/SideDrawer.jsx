@@ -26,7 +26,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ChatLoading from "../ChatLoading";
-import UserListItem from "../userAvatar/UserListItem";
+import UserListItem from "../userAvatar/userListItem";
 import { ChatState } from "../../Context/ChatProvider";
 import ProfileModal from "./ProfileModal";
 
